@@ -19,7 +19,7 @@ import Sidebar from './views/layouts/Sidebar.vue';
 
       <!-- Main content -->
       <main class="col-lg-10 ms-sm-auto px-4">
-        
+        <router-view></router-view>
 
       </main>
 
