@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { api } from '@/config/api';
 import type { User } from '@/interfaces/user';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
     const router =useRouter();
 
     let users =ref<User[]>([]);
+    const successMessage = ref<string>('');
 
     function getUsers(){
         api.get('users')
@@ -18,13 +19,39 @@ import { useRouter } from 'vue-router';
             console.log(error);
         })
     }
-    getUsers();
+    onMounted(() =>{
+        getUsers();
+    });
+
+    function handleDelete(id:number){
+        let confirmation = confirm('Are you sure to delete this User');
+
+        if(confirmation){
+            api.delete(`/users/${id}`)
+            .then(response =>{
+                console.log(response.data.users);
+                successMessage.value = 'User deleted successfully ✅';
+                getUsers(); 
+
+                setTimeout(() => {
+                    successMessage.value = '';
+                }, 3000);
+            })
+            .catch(error =>{
+                console.log(error);
+            });
+        }
+
+    }
 
 </script>
 
 <template>
   <div class="container py-5">
     <div class="card">
+            <div v-if="successMessage" class="alert alert-success">
+            {{ successMessage }}
+            </div>
       <div class="card-header bg-dark text-white">
         <h5 class="mb-0">User Management</h5>
       </div>
@@ -34,19 +61,11 @@ import { useRouter } from 'vue-router';
         <form class="mb-4">
           <div class="row g-3">
             <div class="col-md-4">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Full Name"
-              />
+              <input type="text" class="form-control" placeholder="Full Name"/>
             </div>
 
             <div class="col-md-4">
-              <input
-                type="email"
-                class="form-control"
-                placeholder="Email Address"
-              />
+              <input type="email" class="form-control" placeholder="Email Address"/>
             </div>
 
             <div class="col-md-4">
@@ -73,7 +92,7 @@ import { useRouter } from 'vue-router';
           <tbody>
             <tr v-for="item in users" :key="item.id">
               <td>{{ item.id }}</td>
-              <td>{{ item.fname }}{{ item.lname }}</td>
+              <td>{{ item.fname }} {{ item.lname }}</td>
               <td>{{ item.email }}</td>
               <td>{{ item.phone }}</td>
               <td>
@@ -84,7 +103,7 @@ import { useRouter } from 'vue-router';
                 <div class="d-flex gap-2">
                     <button class="btn btn-sm btn-primary">Details</button>
                     <button class="btn btn-sm btn-warning">Edit</button>
-                    <button class="btn btn-sm btn-danger">Delete</button>
+                    <button @click="handleDelete(item.id)" class="btn btn-sm btn-danger">Delete</button>
                 </div>
               </td>
             </tr>
