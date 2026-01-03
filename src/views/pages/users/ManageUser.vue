@@ -1,4 +1,24 @@
 <script setup lang="ts">
+import { api } from '@/config/api';
+import type { User } from '@/interfaces/user';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+    const router =useRouter();
+
+    let users =ref<User[]>([]);
+
+    function getUsers(){
+        api.get('users')
+        .then(response=>{
+            console.log(response.data);
+            users.value = response.data.users;
+        })
+        .catch(error=>{
+            console.log(error);
+        })
+    }
+    getUsers();
 
 </script>
 
@@ -41,41 +61,31 @@
         <table class="table table-bordered table-striped">
           <thead class="table-dark">
             <tr>
-              <th>#</th>
+              <th>SL</th>
               <th>Name</th>
               <th>Email</th>
+              <th>Phone</th>
+              <th>Status</th>
               <th width="160">Action</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Ahasan Habib</td>
-              <td>ahasan@gmail.com</td>
+            <tr v-for="item in users" :key="item.id">
+              <td>{{ item.id }}</td>
+              <td>{{ item.fname }}{{ item.lname }}</td>
+              <td>{{ item.email }}</td>
+              <td>{{ item.phone }}</td>
               <td>
-                <button class="btn btn-sm btn-warning me-2">Edit</button>
-                <button class="btn btn-sm btn-danger">Delete</button>
+                 <span class="badge bg-success" v-if="item.status === 'active'">Active</span>
+                <span class="badge bg-secondary" v-else>Inactive</span>
               </td>
-            </tr>
-
-            <tr>
-              <td>2</td>
-              <td>Roxy</td>
-              <td>roxy@gmail.com</td>
               <td>
-                <button class="btn btn-sm btn-warning me-2">Edit</button>
-                <button class="btn btn-sm btn-danger">Delete</button>
-              </td>
-            </tr>
-
-            <tr>
-              <td>3</td>
-              <td>John Doe</td>
-              <td>john@gmail.com</td>
-              <td>
-                <button class="btn btn-sm btn-warning me-2">Edit</button>
-                <button class="btn btn-sm btn-danger">Delete</button>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-primary">Details</button>
+                    <button class="btn btn-sm btn-warning">Edit</button>
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                </div>
               </td>
             </tr>
           </tbody>
