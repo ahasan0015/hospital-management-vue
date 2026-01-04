@@ -27,7 +27,7 @@ import { useRouter } from 'vue-router';
         let confirmation = confirm('Are you sure to delete this User');
 
         if(confirmation){
-            api.delete(`/users/${id}`)
+            api.delete(`users/${id}`)
             .then(response =>{
                 console.log(response.data.users);
                 successMessage.value = 'User deleted successfully ✅';
@@ -49,30 +49,30 @@ import { useRouter } from 'vue-router';
 <template>
   <div class="container py-5">
     <div class="card">
-            <div v-if="successMessage" class="alert alert-success">
-            {{ successMessage }}
-            </div>
-      <div class="card-header bg-dark text-white">
-        <h5 class="mb-0">User Management</h5>
-      </div>
-
-      <div class="card-body">
-        <!-- User Form (Static) -->
-        <form class="mb-4">
-          <div class="row g-3">
-            <div class="col-md-4">
-              <input type="text" class="form-control" placeholder="Full Name"/>
-            </div>
-
-            <div class="col-md-4">
-              <input type="email" class="form-control" placeholder="Email Address"/>
-            </div>
-
-            <div class="col-md-4">
-              <router-link to="/createUser" type="button" class="btn btn-primary w-100">
-                Add User
-              </router-link>
-            </div>
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">User Management</h5>
+        </div>
+        
+        <div class="card-body">
+            <!-- User Form (Static) -->
+            <form class="mb-4">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="Full Name"/>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <input type="email" class="form-control" placeholder="Email Address"/>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <router-link to="/createUser" type="button" class="btn btn-primary w-100">
+                            Add User
+                        </router-link>
+                    </div>
+                    <div v-if="successMessage" class="alert alert-success">
+                    {{ successMessage }}
+                    </div>
           </div>
         </form>
 
@@ -101,7 +101,7 @@ import { useRouter } from 'vue-router';
               </td>
               <td>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-primary">Details</button>
+                    <router-link to="/DetailsUser" class="btn btn-sm btn-primary">Details</router-link>
                     <button class="btn btn-sm btn-warning">Edit</button>
                     <button @click="handleDelete(item.id)" class="btn btn-sm btn-danger">Delete</button>
                 </div>
